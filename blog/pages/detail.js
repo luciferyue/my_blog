@@ -1,50 +1,45 @@
 import Head from 'next/head';
-import ReactMarkdown from 'react-markdown';
-import MarkNav from 'markdown-navbar';
+// import ReactMarkdown from 'react-markdown';
+// import MarkNav from 'markdown-navbar';
+import axios from "axios";
+import marked from 'marked'
+import HightLight from "highlight.js";
 import 'markdown-navbar/dist/navbar.css';
 import { Row, Col, Icon, Breadcrumb, Affix } from "antd";
 import Header from "../components/header";
 import Author from "../components/author";
 import Advert from "../components/advert";
 import Footer from "../components/footer";
+import Tocify from '../components/tocify/index.tsx';
 import "../static/style/details.css";
+import 'highlight.js/styles/monokai-sublime.css';
+import api from '../config/apiUrl';
 
-const markdown = '# P01:课程介绍和环境搭建\n' +
-  '[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n' +
-  '> Mditor 是一个简洁、易于集成、方便扩展、期望舒服的编写 markdown 的编辑器，仅此而已... \n\n' +
-  '**这是加粗的文字**\n\n' +
-  '*这是倾斜的文字*`\n\n' +
-  '***这是斜体加粗的文字***\n\n' +
-  '~~这是加删除线的文字~~ \n\n' +
-  '\`console.log(111)\` \n\n' +
-  '# p02:初始Vue3.0\n' +
-  '> aaaaaaaaa\n' +
-  '>> bbbbbbbbb\n' +
-  '>>> cccccccccc\n' +
-  '***\n\n\n' +
-  '# p03:Vue3.0基础知识讲解\n' +
-  '> aaaaaaaaa\n' +
-  '>> bbbbbbbbb\n' +
-  '>>> cccccccccc\n\n' +
-  '# p04:Vue3.0基础知识讲解\n' +
-  '> aaaaaaaaa\n' +
-  '>> bbbbbbbbb\n' +
-  '>>> cccccccccc\n\n' +
-  '#5 p05:Vue3.0基础知识讲解\n' +
-  '> aaaaaaaaa\n' +
-  '>> bbbbbbbbb\n' +
-  '>>> cccccccccc\n\n' +
-  '# p06:Vue3.0基础知识讲解\n' +
-  '> aaaaaaaaa\n' +
-  '>> bbbbbbbbb\n' +
-  '>>> cccccccccc\n\n' +
-  '# p07:Vue3.0基础知识讲解\n' +
-  '> aaaaaaaaa\n' +
-  '>> bbbbbbbbb\n' +
-  '>>> cccccccccc\n\n' +
-  '``` var a=11; ```';
+function Detail(props) {
+  const tocify = new Tocify();
 
-function Detail() {
+  const renderer = new marked.Renderer();
+  renderer.heading = function (text, level, raw) {
+    const anchor = tocify.add(text, level);
+    return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
+  };
+
+  marked.setOptions({
+    renderer: renderer, //自定义render渲染
+    gfm: true,  //启动github渲染模式
+    pedantic: false,  //是否容错
+    sanitize: false,  //是否忽略html标签
+    tables: true, //是否允许git表格样式
+    breaks: false,  //是否支持git换行
+    smartLists: true, //是否自动渲染列表样式
+    smartypants: false, //
+    highlight: function (code) {
+      return HightLight.highlightAuto(code).value;
+    }
+  });
+
+  let html = marked(props.article_content);
+
   return (
     <div>
       <Head>
@@ -75,12 +70,7 @@ function Detail() {
                 <span><Icon type="fire" /> 5498人</span>
               </div>
 
-              <div className="detailed-content">
-                <ReactMarkdown
-                  source={markdown}
-                  escapeHtml={false}
-                />
-              </div>
+              <div className="detailed-content" dangerouslySetInnerHTML={{ __html: html }} />
             </div>
           </div>
         </Col>
@@ -90,12 +80,7 @@ function Detail() {
           <Affix offsetTop={5}>
             <div className="detailed-nav common-box">
               <div className="nav-title">文章目录</div>
-              <MarkNav
-                className="article-menu"
-                source={markdown}
-                headingTopOffset={10}
-                ordered={false}
-              />
+              {tocify && tocify.render()}
             </div>
           </Affix>
         </Col>
@@ -103,6 +88,18 @@ function Detail() {
       <Footer />
     </div>
   )
+}
+Detail.getInitialProps = async (context) => {
+  console.log(context.query.id)
+  let id = context.query.id
+  const promise = new Promise((resolve) => {
+    axios(api.getArticleById + id).then((res) => {
+      console.log('远程获取数据结果:', res.data.data)
+      resolve(res.data.data[0])
+    });
+  })
+
+  return await promise
 }
 
 export default Detail;

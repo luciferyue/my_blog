@@ -43,6 +43,19 @@ module.exports = appInfo => {
     agent: false,
   };
 
+  config.security = {
+    scrf: {
+      enable: false,
+    },
+    // eslint-disable-next-line array-bracket-spacing
+    domainWhiteList: ['*'],
+  };
+  // 域名跨域访问限制
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+  };
+
   return {
     ...config,
     ...userConfig,

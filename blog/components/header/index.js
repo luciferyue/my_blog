@@ -1,9 +1,36 @@
-import React from "react";
-import "./index.css";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Menu, Icon } from "antd";
+import Router from 'next/router';
+// import Link from 'next/link';
+import axios from 'axios';
+import api from '../../config/apiUrl';
+import "./index.css";
 
 //头部
 const Header = () => {
+  const [navArray, setNavArray] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(api.getTypeInfo).then(
+        (res) => {
+          setNavArray(res.data.data)
+          return res.data.data
+        }
+      )
+      setNavArray(result);
+    }
+    fetchData();
+  }, [])
+
+  //跳转到列表页
+  const handleClick = (e) => {
+    if (e.key == 0) {
+      Router.push('/index')
+    } else {
+      Router.push('/list?id=' + e.key)
+    }
+  }
   return (
     <div className="header">
       <Row type="flex" justify="center">
@@ -12,16 +39,24 @@ const Header = () => {
           <span className="header-text">起航</span>
         </Col>
         <Col xs={0} sm={0} md={14} lg={8} xl={6}>
-          <Menu mode="horizontal">
-            <Menu.Item key="home">
-              <Icon type="home" />首页
-            </Menu.Item>
-            <Menu.Item key="video">
-              <Icon type="star" />文章列表
-            </Menu.Item>
-            <Menu.Item key="life">
-              <Icon type="smile" />生活
-            </Menu.Item>
+          <Menu
+            mode="horizontal"
+            onClick={handleClick}
+          >
+            <Menu.Item key="0">
+              <Icon type="home" />
+              博客首页
+          </Menu.Item>
+            {
+              navArray.map((item) => {
+                return (
+                  <Menu.Item key={item.id}>
+                    <Icon type={item.icon} />
+                    {item.typeName}
+                  </Menu.Item>
+                )
+              })
+            }
           </Menu>
         </Col>
       </Row>
