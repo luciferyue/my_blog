@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Route } from "react-router-dom";
+import AddArticle from '../../pages/add_article';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import {
   DesktopOutlined,
@@ -14,8 +16,9 @@ const { SubMenu } = Menu;
 const LayoutCommon = () => {
   const [collapsed, setCollapsed] = useState(false)
   const onCollapse = collapsed => {
-    setCollapsed({ collapsed });
+    setCollapsed( collapsed );
   };
+	console.log(collapsed);
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
@@ -43,7 +46,11 @@ const LayoutCommon = () => {
             <Breadcrumb.Item>后台管理</Breadcrumb.Item>
             <Breadcrumb.Item>工作台</Breadcrumb.Item>
           </Breadcrumb>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>博客工作台.</div>
+					<div style={{ padding: 24, background: '#fff', minHeight: 360 }}> 
+							<div>
+								<Route path="/index/" exact  component={AddArticle} />
+							</div>
+					</div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>JSPang.com</Footer>
       </Layout>
