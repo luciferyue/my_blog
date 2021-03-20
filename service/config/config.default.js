@@ -44,7 +44,7 @@ module.exports = appInfo => {
   };
 
   config.security = {
-    scrf: {
+    csrf: {
       enable: false,
     },
     // eslint-disable-next-line array-bracket-spacing
@@ -52,7 +52,9 @@ module.exports = appInfo => {
   };
   // 域名跨域访问限制
   config.cors = {
-    origin: '*',
+    // origin: '*',
+    origin: 'http://localhost:3000',
+    credentials: true, // 允许Cook可以跨域
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   };
 

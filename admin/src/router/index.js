@@ -6,7 +6,7 @@ import Layout from '../common/layout';
 function Main() {
   return (
     <Router>
-      <Route path="/login/" exact component={Login} />
+      <Route path="/" exact component={Login} />
       <Route path="/index/" exact component={Layout} />
     </Router>
   )
