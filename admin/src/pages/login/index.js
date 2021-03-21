@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
 import { Card, Input, Button, Spin, message } from 'antd';
 import "./index.css";
 import { createFromIconfontCN } from '@ant-design/icons';
@@ -9,6 +10,7 @@ const Icon = createFromIconfontCN({
 });
 
 function Login(props) {
+  const history = useHistory();
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -32,8 +34,8 @@ function Login(props) {
       res => {
         setIsLoading(false)
         if (res.data.data === '登录成功') {
-          localStorage.setItem('openId', res.data.openId);
-          props.history.push('/index')
+          // localStorage.setItem('openId', res.data.openId);
+          history.push('/cms')
         } else {
           message.error('用户名密码错误')
         }

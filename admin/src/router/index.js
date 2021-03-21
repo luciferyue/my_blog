@@ -25,7 +25,7 @@ function Main() {
     <Suspense fallback={<></>}>
       <Router>
         <Route path="/" exact render={(props) => {
-          return <PageLayout {...props} component={Login} />;
+          return <Login />;
         }} />
         <Route path="/cms/" exact render={(props) => {
           return <PageLayout {...props} component={AddArticle} />;
