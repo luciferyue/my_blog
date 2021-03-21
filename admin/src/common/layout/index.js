@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Route } from "react-router-dom";
 import AddArticle from '../../pages/add_article';
+import ArticleList from '../../pages/article_list';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import {
   DesktopOutlined,
@@ -13,12 +14,25 @@ import "./index.css";
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-const LayoutCommon = () => {
+const LayoutCommon = (props) => {
   const [collapsed, setCollapsed] = useState(false)
   const onCollapse = collapsed => {
-    setCollapsed( collapsed );
+    setCollapsed(collapsed);
   };
-	console.log(collapsed);
+  const handleClickArticle = e => {
+    if (e.key === 'addArticle') {
+      props.history.push('/cms/add')
+    } else {
+      props.history.push('/cms/list')
+    }
+  }
+
+  const renderContent = () => {
+    // eslint-disable-next-line react/prop-types
+    const WrappedComponent = props.component;
+
+    return <WrappedComponent {...props} />;
+  };
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
@@ -27,12 +41,9 @@ const LayoutCommon = () => {
           <Menu.Item key="1" icon={<PieChartOutlined />}>
             工作台
           </Menu.Item>
-          <Menu.Item key="2" icon={<DesktopOutlined />}>
-            添加文章
-          </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="文章管理">
-            <Menu.Item key="3">文章管理</Menu.Item>
-            <Menu.Item key="4">添加文章</Menu.Item>
+          <SubMenu key="sub1" icon={<UserOutlined />} onClick={handleClickArticle} title="文章管理">
+            <Menu.Item key="addArticle">添加文章</Menu.Item>
+            <Menu.Item key="articleList">文章列表</Menu.Item>
           </SubMenu>
           <Menu.Item key="9" icon={<FileOutlined />}>
             留言管理
@@ -46,13 +57,11 @@ const LayoutCommon = () => {
             <Breadcrumb.Item>后台管理</Breadcrumb.Item>
             <Breadcrumb.Item>工作台</Breadcrumb.Item>
           </Breadcrumb>
-					<div style={{ padding: 24, background: '#fff', minHeight: 360 }}> 
-							<div>
-								<Route path="/index/" exact  component={AddArticle} />
-							</div>
-					</div>
+          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+            {renderContent()}
+          </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>JSPang.com</Footer>
+        <Footer style={{ textAlign: 'center' }}>Monkey D Luffy.com</Footer>
       </Layout>
     </Layout>
   );

@@ -66,8 +66,34 @@ function AddArticle(props) {
 		)
 	}
 
+	const getArticleById = (id) => {
+		axios(api.getArticleById + `/${id}`, {
+			withCredentials: true,
+			header: { 'Access-Control-Allow-Origin': '*' }
+		}).then(
+			res => {
+				//let articleInfo= res.data.data[0]
+				setArticleTitle(res.data.data[0].title)
+				setArticleContent(res.data.data[0].article_content)
+				let html = marked(res.data.data[0].article_content)
+				setMarkdownContent(html)
+				setIntroducemd(res.data.data[0].introduce)
+				let tmpInt = marked(res.data.data[0].introduce)
+				setIntroducehtml(tmpInt)
+				setShowDate(res.data.data[0].addTime)
+				setSelectType(res.data.data[0].typeId)
+			}
+		)
+	}
+
 	useEffect(() => {
-		getTypeInfo()
+		getTypeInfo();
+		//获得文章ID
+		let tmpId = props.match.params.id
+		if (tmpId) {
+			setArticleId(tmpId)
+			getArticleById(tmpId)
+		}
 	}, []);
 
 	//选择类别后的便哈
@@ -103,7 +129,6 @@ function AddArticle(props) {
 
 
 		if (articleId === 0) {
-			console.log('articleId=:' + articleId)
 			dataProps.viewNum = 0;
 			axios({
 				method: 'post',
@@ -131,14 +156,11 @@ function AddArticle(props) {
 				withCredentials: true
 			}).then(
 				res => {
-
 					if (res.data.isSuccess) {
 						message.success('文章保存成功')
 					} else {
 						message.error('保存失败');
 					}
-
-
 				}
 			)
 		}
@@ -151,13 +173,14 @@ function AddArticle(props) {
 					<Row gutter={10} >
 						<Col span={20}>
 							<Input
+								value={articleTitle}
 								placeholder="博客标题"
 								onChange={(e) => setArticleTitle(e.target.value)}
 								size="large"
 							/>
 						</Col>
 						<Col span={4}>&nbsp;
-						<Select defaultValue={selectedType} onChange={selectTypeHandler} size="large">
+						<Select value={selectedType} onChange={selectTypeHandler} size="large">
 								{
 									typeInfo.map((item, index) => {
 										return (<Option key={index} value={item.id}>{item.typeName}</Option>)
