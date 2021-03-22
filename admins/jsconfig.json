@@ -1,0 +1,43 @@
+{
+	"compilerOptions": {
+		"sourceMap": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"target": "es5",
+		"jsx": "react",
+		"baseUrl": "./",
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"lib": [
+			"dom"
+		],
+		"paths": {
+			"@src/*": [
+				"src/*"
+			],
+			"@base/*": [
+				"src/components/base/*"
+			],
+			"@common/*": [
+				"src/components/common/*"
+			],
+			"@components/*": [
+				"src/components/*"
+			],
+			"@hooks": [
+				"src/hooks/index.js"
+			],
+			"@types": [
+				"src/types.js"
+			],
+			"@page/*": [
+				"src/pages/*"
+			],
+			"@utils/*": [
+				"src/utils/*"
+			]
+		}
+	},
+	"exclude": []
+}

@@ -20,10 +20,17 @@ class MainController extends Controller {
       // 登录成功,进行session缓存
       const openId = new Date().getTime();
       this.ctx.session.openId = { openId };
-      this.ctx.body = { data: '登录成功', openId };
+
+      this.ctx.cookies.set('moon_token', openId.toString(), {
+        maxAge: 1000 * 3600 * 24, // cookie存储一天 设置过期时间后关闭浏览器重新打开cookie还存在
+        httpOnly: true,
+        signed: true, // 对cookie进行签名，防止用户修改cookie
+        encrypt: true, // 是否对cookie进行加密，如果加密那么获取的时候要对cookie进行解密
+      });
+      this.ctx.body = { code: 0, meg: '', data: '登录成功' };
 
     } else {
-      this.ctx.body = { data: '登录失败' };
+      this.ctx.body = { code: 0, meg: 'ok', data: '登录失败' };
     }
   }
   // 后台文章分类信息
@@ -42,8 +49,11 @@ class MainController extends Controller {
     const insertId = result.insertId;
 
     this.ctx.body = {
-      isSuccess: insertSuccess,
-      insertId,
+      code: 0, meg: 'ok',
+      data: {
+        isSuccess: insertSuccess,
+        insertId,
+      },
     };
   }
 
@@ -54,7 +64,10 @@ class MainController extends Controller {
     const result = await this.app.mysql.update('article', tmpArticle);
     const updateSuccess = result.affectedRows === 1;
     this.ctx.body = {
-      isSuccess: updateSuccess,
+      code: 0, meg: 'ok', data: {
+        isSuccess: updateSuccess,
+      },
+
     };
   }
 
@@ -70,14 +83,14 @@ class MainController extends Controller {
       'ORDER BY article.id DESC ';
 
     const resList = await this.app.mysql.query(sql);
-    this.ctx.body = { list: resList };
+    this.ctx.body = { code: 0, meg: 'ok', data: { list: resList } };
   }
 
   // 删除文章
   async delArticle() {
     const id = this.ctx.params.id;
     const res = await this.app.mysql.delete('article', { id });
-    this.ctx.body = { data: res };
+    this.ctx.body = { code: 0, meg: 'ok', data: res };
   }
 
   // 根据文章ID得到文章详情，用于修改文章
@@ -95,7 +108,7 @@ class MainController extends Controller {
       'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
       'WHERE article.id=' + id;
     const result = await this.app.mysql.query(sql);
-    this.ctx.body = { data: result };
+    this.ctx.body = { code: 0, meg: 'ok', data: result };
   }
 }
 
