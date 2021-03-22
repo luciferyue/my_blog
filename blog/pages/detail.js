@@ -5,14 +5,9 @@ import axios from "axios";
 import marked from 'marked'
 import HightLight from "highlight.js";
 import 'markdown-navbar/dist/navbar.css';
-import { Row, Col, Icon, Breadcrumb, Affix } from "antd";
-import Header from "../components/header";
-import Author from "../components/author";
-import Advert from "../components/advert";
-import Footer from "../components/footer";
+import { Breadcrumb, Affix } from "antd";
+import Layout from "../components/layout";
 import Tocify from '../components/tocify/index.tsx';
-import "../static/style/details.css";
-import 'highlight.js/styles/monokai-sublime.css';
 import api from '../config/apiUrl';
 
 function Detail(props) {
@@ -39,54 +34,38 @@ function Detail(props) {
   });
 
   let html = marked(props.article_content);
+  console.log(props);
+  const renderAffix = () => {
+    return (
+      <Affix offsetTop={5}>
+        <div className="detailed-nav common-box">
+          <div className="nav-title">文章目录</div>
+          {tocify && tocify.render()}
+        </div>
+      </Affix>
+    )
+  }
+
+  const renderBread = () => {
+    return (
+      <div className="bread-wap">
+        <Breadcrumb>
+          <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
+          <Breadcrumb.Item><a href={`/list?id=${props.typeId}`}>{props.typeName}列表</a></Breadcrumb.Item>
+          <Breadcrumb.Item>{props.title}</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+    )
+  }
 
   return (
-    <div>
-      <Head>
-        <title>Detail</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Header />
-
-      <Row className="common-wap" type="flex" justify="center">
-        <Col className="common-left" xs={24} sm={24} md={16} lg={18} xl={14}>
-          <div>
-            <div className="bread-div">
-              <Breadcrumb>
-                <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                <Breadcrumb.Item><a href="/list">视频列表</a></Breadcrumb.Item>
-                <Breadcrumb.Item>xxxx</Breadcrumb.Item>
-              </Breadcrumb>
-            </div>
-
-            <div>
-              <div className="detailed-title">
-                React实战视频教程-技术胖Blog开发(更新08集)
-              </div>
-
-              <div className="list-icon center">
-                <span><Icon type="calendar" /> 2019-06-28</span>
-                <span><Icon type="folder" /> 教程</span>
-                <span><Icon type="fire" /> 5498人</span>
-              </div>
-
-              <div className="detailed-content" dangerouslySetInnerHTML={{ __html: html }} />
-            </div>
-          </div>
-        </Col>
-        <Col className="common-right" xs={0} sm={0} md={7} lg={5} xl={4}>
-          <Author />
-          <Advert />
-          <Affix offsetTop={5}>
-            <div className="detailed-nav common-box">
-              <div className="nav-title">文章目录</div>
-              {tocify && tocify.render()}
-            </div>
-          </Affix>
-        </Col>
-      </Row>
-      <Footer />
-    </div>
+    <Layout
+      title="文章详情"
+      renderBread={renderBread}
+      renderAffix={renderAffix}
+    >
+      <div className="detailed-content" dangerouslySetInnerHTML={{ __html: html }} />
+    </Layout>
   )
 }
 Detail.getInitialProps = async (context) => {

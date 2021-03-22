@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import Head from 'next/head';
 import Link from "next/link";
-import { Row, Col, List, Icon } from "antd";
-import Header from "../components/header";
-import Author from "../components/author";
-import Advert from "../components/advert";
-import Footer from "../components/footer";
+import { List, Icon } from "antd";
+import Layout from "../components/layout";
 import axios from "axios";
 import api from '../config/apiUrl';
 import marked from 'marked'
 import HightLight from "highlight.js";
-import 'highlight.js/styles/monokai-sublime.css';
-import "../static/style/index.css";
 
 function Home(list) {
   const [myList, setList] = useState(list.data);
@@ -30,41 +24,28 @@ function Home(list) {
     }
   });
   return (
-    <div>
-      <Head>
-        <title>Home</title>
-      </Head>
-      <Header />
-      <Row className="common-wap" type="flex" justify="center">
-        <Col className="common-left" xs={24} sm={24} md={16} lg={18} xl={14}>
-          <List
-            header={<div>最新日志</div>}
-            itemLayout="vertical"
-            dataSource={myList}
-            renderItem={item => (
-              <List.Item>
-                <div className="list-title">
-                  <Link href={{ pathname: '/detail', query: { id: item.id } }}>
-                    <a>{item.title}</a>
-                  </Link>
-                </div>
-                <div className="list-icon">
-                  <span><Icon type="calendar" />{item.addTime || "今天"}</span>
-                  <span><Icon type="folder" />教程</span>
-                  <span><Icon type="fire" />{item.viewNum}人</span>
-                </div>
-                <div className="list-context" dangerouslySetInnerHTML={{ __html: marked(item.introduce) }} />
-              </List.Item>
-            )}
-          />
-        </Col>
-        <Col className="common-right" xs={0} sm={0} md={7} lg={5} xl={4}>
-          <Author />
-          <Advert />
-        </Col>
-      </Row>
-      <Footer />
-    </div>
+    <Layout title="首页">
+      <List
+        header={<div>最新文章</div>}
+        itemLayout="vertical"
+        dataSource={myList}
+        renderItem={item => (
+          <List.Item>
+            <div className="list-title">
+              <Link href={{ pathname: '/detail', query: { id: item.id } }}>
+                <a>{item.title}</a>
+              </Link>
+            </div>
+            <div className="list-icon">
+              <span><Icon type="calendar" /> {item.addTime || "今天"}</span>
+              <span><Icon type="folder" /> {item.typeName}</span>
+              <span><Icon type="fire" /> {item.viewNum}人</span>
+            </div>
+            <div className="list-context" dangerouslySetInnerHTML={{ __html: marked(item.introduce) }} />
+          </List.Item>
+        )}
+      />
+    </Layout>
   )
 }
 

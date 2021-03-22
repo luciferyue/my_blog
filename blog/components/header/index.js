@@ -35,8 +35,7 @@ const Header = () => {
     <div className="header">
       <Row type="flex" justify="center">
         <Col xs={24} sm={24} md={10} lg={15} xl={12}>
-          <span className="header-log">Luffy</span>
-          <span className="header-text">起航</span>
+          <div className="logo">Luffy起航</div>
         </Col>
         <Col xs={0} sm={0} md={14} lg={8} xl={6}>
           <Menu

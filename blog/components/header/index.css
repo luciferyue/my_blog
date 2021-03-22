@@ -1,19 +1,15 @@
 .header{
     background-color: #fff;
-    padding: .4rem;
     overflow: hidden;
-    height: 3.2rem;
     border-bottom:1px solid #eee;
-   
+    height: 3rem;
+    margin-bottom: 1rem;
 }
-.header-logo{
-    color:#1e90ff;
+
+.header .logo{
+    line-height: 1;
     font-size: 1.4rem;
-    text-align: left;
-}
-.header-txt{
-    font-size: 0.6rem;
-    color: #999;
-    display: inline-block;
+    color: #777;
     padding-left: 0.3rem;
+    margin-top: .6rem;
 }
