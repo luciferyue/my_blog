@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import { List, Row, Col, Modal, message, Button } from "antd";
 import { useHistory } from "react-router";
 import { useAction, useStore } from "@hooks";
-import { FETCH_ARTICLE_LIST_DATA } from "@src/types";
+import { FETCH_ARTICLE_LIST_DATA, FETCH_DELETE_ARTICLE_DATA } from "@src/types";
 import "./index.css";
 const { confirm } = Modal;
 
 function ArticleList() {
 	const { push } = useHistory();
 	const fetchData = useAction(FETCH_ARTICLE_LIST_DATA);
-	const deleteData = useAction(FETCH_ARTICLE_LIST_DATA);
+	const deleteData = useAction(FETCH_DELETE_ARTICLE_DATA);
 	const { articleListState } = useStore("articleListReducer");
 
 	useEffect(() => {
@@ -28,9 +28,7 @@ function ArticleList() {
 			content: "如果你点击OK按钮，文章将会永远被删除，无法恢复。",
 			onOk() {
 				deleteData({
-					id,
-					callback: () => {
-						message.success("文章删除成功");
+					id, callback: () => {
 						fetchData();
 					}
 				});

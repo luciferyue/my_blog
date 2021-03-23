@@ -17,7 +17,7 @@ const { SubMenu } = Menu;
 function LayoutCommon(props) {
 	// eslint-disable-next-line react/prop-types
 	const { initStatus } = useStore("commonReducer");
-	const { history } = useHistory();
+	const { push } = useHistory();
 	const { isInitialized, errorType, errorMsg } = initStatus;
 	const pageInitializedError = useAction(PAGE_INITIALIZED_ERROR);
 	const [collapsed, setCollapsed] = useState(false);
@@ -26,9 +26,9 @@ function LayoutCommon(props) {
 	};
 	const handleClickArticle = e => {
 		if (e.key === "addArticle") {
-			history.push("/cms/add");
+			push("/cms/add");
 		} else {
-			history.push("/cms/list");
+			push("/cms/list");
 		}
 	};
 

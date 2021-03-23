@@ -36,7 +36,7 @@ class MainController extends Controller {
   // 后台文章分类信息
   async getTypeInfo() {
     const resType = await this.app.mysql.select('type');
-    this.ctx.body = { data: resType };
+    this.ctx.body = { code: 0, msg: 'ok', data: resType };
   }
 
   // 添加文章
@@ -60,7 +60,7 @@ class MainController extends Controller {
   // 修改文章
   async updateArticle() {
     const tmpArticle = this.ctx.request.body;
-
+    console.log(tmpArticle);
     const result = await this.app.mysql.update('article', tmpArticle);
     const updateSuccess = result.affectedRows === 1;
     this.ctx.body = {
@@ -88,15 +88,21 @@ class MainController extends Controller {
 
   // 删除文章
   async delArticle() {
-    const id = this.ctx.params.id;
-    const res = await this.app.mysql.delete('article', { id });
-    this.ctx.body = { code: 0, meg: 'ok', data: res };
+    const id = this.ctx.query.id;
+    const result = await this.app.mysql.delete('article', { id });
+    const insertSuccess = result.affectedRows === 1;
+
+    this.ctx.body = {
+      code: 0, meg: 'ok',
+      data: {
+        isSuccess: insertSuccess,
+      },
+    };
   }
 
   // 根据文章ID得到文章详情，用于修改文章
   async getArticleById() {
-    const id = this.ctx.params.id;
-
+    const id = this.ctx.query.id;
     const sql = 'SELECT article.id as id,' +
       'article.title as title,' +
       'article.introduce as introduce,' +
@@ -108,7 +114,7 @@ class MainController extends Controller {
       'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
       'WHERE article.id=' + id;
     const result = await this.app.mysql.query(sql);
-    this.ctx.body = { code: 0, meg: 'ok', data: result };
+    this.ctx.body = { code: 0, meg: 'ok', data: result[0] };
   }
 }
 
