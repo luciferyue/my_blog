@@ -2,6 +2,7 @@ import { call, put } from "redux-saga/effects";
 import http from "@utils/http";
 import { PAGE_INITIALIZED_ERROR } from "@types";
 import { message } from "antd";
+import { history } from "../store";
 
 export function* requestSaga(url, params) {
 	const opts = {
@@ -47,7 +48,7 @@ export function* disposeError(err, opts) {
 	if (err.response && err.response.status !== 200) {
 		if (err.response.status === 401) {
 			//未登录跳转
-			// window.location.href = "";
+			history.push("/");
 		} else {
 			if (errorLevel === 1) {
 				showToast("出错了");

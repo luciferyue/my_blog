@@ -16,7 +16,8 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1615990978020_702';
 
   // add your middleware config here
-  config.middleware = [];
+  // eslint-disable-next-line array-bracket-spacing
+  config.middleware = ['errorHandler'];
 
   // add your user config here
   const userConfig = {
