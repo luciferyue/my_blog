@@ -1,6 +1,6 @@
 import { takeEvery, put } from "redux-saga/effects";
 import * as api from "@src/api";
-import { requestSaga } from "./request.saga";
+import { requestSaga, upLoading } from "./request.saga";
 import { message } from "antd";
 import {
 	FETCH_ARTICLE_DATA,
@@ -15,6 +15,7 @@ import {
 //获取type
 export function* fetchArticleType(opt) {
 	const parm = opt.payload;
+	yield upLoading(true);
 	try {
 		const payload = yield requestSaga(api.fetchTypeData, {
 			apiParam: parm,
@@ -24,6 +25,7 @@ export function* fetchArticleType(opt) {
 	} catch (e) {
 		console.log(e);
 	}
+	yield upLoading(false);
 }
 
 export function* watchFetchArticleType() {
@@ -33,6 +35,7 @@ export function* watchFetchArticleType() {
 //获取文章
 export function* fetchArticle(opt) {
 	const parm = opt.payload;
+	yield upLoading(true);
 	try {
 		const payload = yield requestSaga(api.fetchArticleData, {
 			apiParam: parm,
@@ -42,6 +45,7 @@ export function* fetchArticle(opt) {
 	} catch (e) {
 		console.log(e);
 	}
+	yield upLoading(false);
 }
 
 export function* watchFetchArticle() {
@@ -51,6 +55,7 @@ export function* watchFetchArticle() {
 //添加文章
 export function* fetchAddArticle(opt) {
 	const { apiParam, callback } = opt.payload;
+	yield upLoading(true);
 	try {
 		const result = yield requestSaga(api.fetchAddArticle, {
 			apiParam,
@@ -66,6 +71,7 @@ export function* fetchAddArticle(opt) {
 	} catch (e) {
 		console.log(e);
 	}
+	yield upLoading(false);
 }
 
 export function* watchFetchAddArticle() {
@@ -75,6 +81,7 @@ export function* watchFetchAddArticle() {
 //更新文章
 export function* fetchUpdateArticle(opt) {
 	const parm = opt.payload;
+	yield upLoading(true);
 	try {
 		const result = yield requestSaga(api.fetchUpdateArticle, {
 			apiParam: parm,
@@ -89,6 +96,7 @@ export function* fetchUpdateArticle(opt) {
 	} catch (e) {
 		console.log(e);
 	}
+	yield upLoading(false);
 }
 
 export function* watchFetchUpdateArticle() {
@@ -98,6 +106,7 @@ export function* watchFetchUpdateArticle() {
 //删除文章
 export function* fetchDeleteArticle(opt) {
 	const { callback, id } = opt.payload;
+	yield upLoading(true);
 	try {
 		const result = yield requestSaga(api.fetchDeleteArticle, {
 			apiParam: { id },
@@ -112,6 +121,7 @@ export function* fetchDeleteArticle(opt) {
 	} catch (e) {
 		console.log(e);
 	}
+	yield upLoading(false);
 }
 
 export function* watchFetchDeleteArticle() {

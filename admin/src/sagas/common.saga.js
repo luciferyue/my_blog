@@ -1,21 +1,21 @@
 import { takeEvery } from "redux-saga/effects";
 import * as api from "@src/api";
-import { requestSaga } from "./request.saga";
+import { requestSaga, upLoading } from "./request.saga";
 import { FETCH_LOGIN_DATA } from "@types";
-import { message } from "antd";
+import { history } from "../store";
 
 export function* fetchLogin(opt) {
-	const { userName, password, callback } = opt.payload;
-	message.loading(true);
+	const { userName, password } = opt.payload;
+	yield upLoading(true);
 	try {
-		const payload = yield requestSaga(api.fetchLogin, {
+		yield requestSaga(api.fetchLogin, {
 			apiParam: { userName, password }
 		});
-		callback && callback(payload);
-		message.loading(false);
+		history.push("/cms");
 	} catch (e) {
 		console.log(e);
 	}
+	yield upLoading(false);
 }
 
 export function* watchFetchLogin() {

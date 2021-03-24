@@ -8,7 +8,8 @@ import {
 	UPDATE_ARTICLE_DATA,
 	FETCH_ARTICLE_TYPE,
 	FETCH_ADD_ARTICLE_DATA,
-	FETCH_UPDATE_ARTICLE_DATA
+	FETCH_UPDATE_ARTICLE_DATA,
+	CLEAR_ARTICLE_DATA
 } from "@src/types";
 import "./index.css";
 
@@ -21,6 +22,7 @@ function AddArticle(props) {
 	const updateData = useAction(UPDATE_ARTICLE_DATA);
 	const fetchAddData = useAction(FETCH_ADD_ARTICLE_DATA);
 	const fetchUpdateData = useAction(FETCH_UPDATE_ARTICLE_DATA);
+	const clearData = useAction(CLEAR_ARTICLE_DATA);
 	const { articleState, typeState } = useStore("articleReducer");
 	const { id, title, typeName, article_content, introduce, typeId, addTime } = articleState;
 	console.log(typeState);
@@ -53,6 +55,10 @@ function AddArticle(props) {
 		let tmpId = props.match.params.id;
 		tmpId && fetchData({ id: tmpId });
 		fetchTypeData();
+
+		return () => {
+			clearData();
+		};
 	}, []);
 
 	const saveArticle = () => {

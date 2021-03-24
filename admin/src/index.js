@@ -1,9 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import 'antd/dist/antd.css';
-import Main from './router';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./app";
+import "./styles/layout.css";
 
-ReactDOM.render(
-  <Main />,
-  document.getElementById('root')
-);
+ReactDOM.render(<App />, document.querySelector("#root"));

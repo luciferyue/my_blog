@@ -1,6 +1,6 @@
 import { call, put } from "redux-saga/effects";
 import http from "@utils/http";
-import { PAGE_INITIALIZED_ERROR } from "@types";
+import { PAGE_INITIALIZED_ERROR, UPDATE_LOADING } from "@types";
 import { message } from "antd";
 import { history } from "../store";
 
@@ -91,4 +91,11 @@ function* pageError(msg = "", errorType = 1) {
 		payload: { errorType, errorMsg: msg },
 	});
 	message.loading(false);
+}
+
+export function* upLoading(bl) {
+	yield put({
+		type: UPDATE_LOADING,
+		payload: bl,
+	});
 }

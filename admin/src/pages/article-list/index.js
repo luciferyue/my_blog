@@ -56,12 +56,8 @@ function ArticleList() {
 						<b>发布时间</b>
 					</Col>
 					<Col span={3}>
-						<b>集数</b>
-					</Col>
-					<Col span={3}>
 						<b>浏览量</b>
 					</Col>
-
 					<Col span={4}>
 						<b>操作</b>
 					</Col>
@@ -82,12 +78,8 @@ function ArticleList() {
 							{item.addTime}
 						</Col>
 						<Col span={3}>
-							共<span>{item.part_count}</span>集
-						</Col>
-						<Col span={3}>
 							{item.viewNum}
 						</Col>
-
 						<Col span={4}>
 							<Button type="primary" onClick={() => handleClick(item.id)}>修改</Button>&nbsp;
 							<Button onClick={() => delArticle(item.id)} >删除 </Button>

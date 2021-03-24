@@ -1,6 +1,6 @@
 
 import { combineReducers } from "redux";
-import { UPDATE_INITIALIZE, PAGE_INITIALIZED_ERROR } from "@types";
+import { UPDATE_INITIALIZE, PAGE_INITIALIZED_ERROR, UPDATE_LOADING } from "@types";
 
 const initializeState = {
 	errorType: 0,
@@ -22,8 +22,18 @@ const initStatus = (state = initializeState, action) => {
 	}
 };
 
+const loading = (state = false, action) => {
+	switch (action.type) {
+		case UPDATE_LOADING:
+			return action.payload;
+		default:
+			return state;
+	}
+};
+
 const commonReducer = combineReducers({
 	initStatus,
+	loading
 });
 
 export default commonReducer;

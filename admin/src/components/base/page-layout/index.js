@@ -3,8 +3,8 @@ import { useStore, useAction } from "@hooks";
 import { useHistory } from "react-router";
 import PropTypes from "prop-types";
 import PageError from "../page-error";
-import { PAGE_INITIALIZED_ERROR } from "@types";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { PAGE_INITIALIZED_ERROR, UPDATE_LOADING } from "@types";
+import { Layout, Menu, Breadcrumb, Spin } from "antd";
 import {
 	PieChartOutlined,
 	FileOutlined,
@@ -15,15 +15,23 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 function LayoutCommon(props) {
-	// eslint-disable-next-line react/prop-types
-	const { initStatus } = useStore("commonReducer");
+	const { initStatus, loading } = useStore("commonReducer");
 	const { push } = useHistory();
 	const { isInitialized, errorType, errorMsg } = initStatus;
 	const pageInitializedError = useAction(PAGE_INITIALIZED_ERROR);
+	const updateLoading = useAction(UPDATE_LOADING);
 	const [collapsed, setCollapsed] = useState(false);
+
+	useEffect(() => {
+		return () => {
+			updateLoading(false);
+		};
+	}, []);
+
 	const onCollapse = collapsed => {
 		setCollapsed(collapsed);
 	};
+
 	const handleClickArticle = e => {
 		if (e.key === "addArticle") {
 			push("/cms/add");
@@ -55,16 +63,19 @@ function LayoutCommon(props) {
 				</Sider>
 				<Layout>
 					<Header style={{ background: "#fff", padding: 0 }} />
-					<Content style={{ margin: "0 16px" }}>
-						<Breadcrumb style={{ margin: "16px 0" }}>
-							<Breadcrumb.Item>后台管理</Breadcrumb.Item>
-							<Breadcrumb.Item>工作台</Breadcrumb.Item>
-						</Breadcrumb>
-						<div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
-							<WrappedComponent {...props} />
-						</div>
-					</Content>
+					<Spin tip="Loading..." spinning={loading}>
+						<Content style={{ margin: "0 16px" }}>
+							<Breadcrumb style={{ margin: "16px 0" }}>
+								<Breadcrumb.Item>后台管理</Breadcrumb.Item>
+								<Breadcrumb.Item>工作台</Breadcrumb.Item>
+							</Breadcrumb>
+							<div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
+								<WrappedComponent {...props} />
+							</div>
+						</Content>
+					</Spin>
 					<Footer style={{ textAlign: "center" }}>Monkey D Luffy.com</Footer>
+
 				</Layout>
 			</Layout>
 		);

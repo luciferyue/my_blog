@@ -1,6 +1,6 @@
 
 import { combineReducers } from "redux";
-import { RECEIVE_ARTICLE_DATA, UPDATE_ARTICLE_DATA, RECEIVE_ARTICLE_TYPE } from "@types";
+import { RECEIVE_ARTICLE_DATA, UPDATE_ARTICLE_DATA, RECEIVE_ARTICLE_TYPE, CLEAR_ARTICLE_DATA } from "@types";
 
 const defaultArticle = {
 	id: 0,
@@ -19,6 +19,8 @@ const articleState = (state = defaultArticle, action) => {
 			return action.payload;
 		case UPDATE_ARTICLE_DATA:
 			return { ...state, ...action.payload };
+		case CLEAR_ARTICLE_DATA:
+			return defaultArticle;
 		default:
 			return state;
 	}
