@@ -13,6 +13,13 @@ class MainController extends Controller {
     const { ctx, service } = this;
     const { userName, password } = ctx.request.body;
 
+    // 校验参数
+    const paramRule = {
+      userName: { type: 'string', required: true },
+      password: { type: 'password', required: true },
+    };
+    ctx.validate(paramRule);
+
     const result = await service.admin.checkLogin({ userName, password });
     ctx.helper.success({ ctx, data: result });
   }
@@ -58,7 +65,7 @@ class MainController extends Controller {
   // 获得文章列表
   async getArticleList() {
     const { ctx, service } = this;
-    const result = await service.admin.queryArticleList();
+    const result = await service.article.queryArticleList();
     ctx.helper.success({ ctx, data: { list: result } });
   }
 
@@ -78,7 +85,7 @@ class MainController extends Controller {
   // 根据文章ID得到文章详情，用于修改文章
   async getArticleById() {
     const { ctx, service } = this;
-    const result = await service.admin.queryArticleById(ctx.query.id);
+    const result = await service.article.queryArticleById(ctx.query.id);
     ctx.helper.success({ ctx, data: result });
   }
 }

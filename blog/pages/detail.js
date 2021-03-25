@@ -69,12 +69,11 @@ function Detail(props) {
   )
 }
 Detail.getInitialProps = async (context) => {
-  console.log(context.query.id)
   let id = context.query.id
   const promise = new Promise((resolve) => {
     axios(api.getArticleById + id).then((res) => {
       console.log('远程获取数据结果:', res.data.data)
-      resolve(res.data.data[0])
+      resolve(res.data.data)
     });
   })
 

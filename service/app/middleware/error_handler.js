@@ -8,7 +8,14 @@ module.exports = (options, app) => {
       // 跑错错误日志
       app.emit('error', err, this);
       console.log(err);
-      if (!err.code) {
+
+      if (err._operation) {
+        ctx.body = {
+          code: err.code,
+          msg: err.msg,
+        };
+      } else {
+        // if (!err.code) {
         const status = err.status || 500;
         // 生产环境时 500 错误的详细错误内容不返回给客户端，因为可能包含敏感信息
 
@@ -18,15 +25,11 @@ module.exports = (options, app) => {
           code: status,
           msg: error,
         };
-
         // 用户定义错误
         if (status === 422) {
-          ctx.body.msg = err.errors;
+          ctx.body.msg = err.errors[0].message;
         }
-      } else {
-        ctx.body = err;
       }
-      console.log(ctx.body);
       ctx.status = 200;
     }
   };

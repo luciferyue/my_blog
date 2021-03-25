@@ -3,7 +3,7 @@ const { Service } = require('egg');
 
 class AdminService extends Service {
 
-  // 查询文章
+  // 检查登陆
   async checkLogin({ userName, password }) {
     const { app, ctx } = this;
     const sql = " SELECT userName FROM admin_user WHERE userName = '" + userName +
@@ -11,7 +11,7 @@ class AdminService extends Service {
 
     const res = await app.mysql.query(sql);
     if (res.length > 0) {
-      // 登录成功,进行session缓存
+      // 登录成功,进行cookies缓存
       const openId = new Date().getTime();
 
       ctx.cookies.set('moon_token', openId.toString(), {
@@ -23,42 +23,7 @@ class AdminService extends Service {
       return '登录成功';
 
     }
-    throw { code: 10001, msg: '账户密码错误' };
-  }
-
-  // 查询文章
-  async queryArticleById(id) {
-    const { app } = this;
-    const sql = 'SELECT article.id as id,' +
-      'article.title as title,' +
-      'article.introduce as introduce,' +
-      'article.article_content as article_content,' +
-      "FROM_UNIXTIME(article.addTime,'%Y-%m-%d' ) as addTime," +
-      'article.viewNum as viewNum ,' +
-      'type.typeName as typeName ,' +
-      'type.id as typeId ' +
-      'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
-      'WHERE article.id=' + id;
-    const result = await app.mysql.query(sql);
-    if (result.length) {
-      return result[0];
-    }
-    throw { code: 10002, msg: '查询文章失败' };
-  }
-
-  // 查询文章列表
-  async queryArticleList() {
-    const { app } = this;
-    const sql = 'SELECT article.id as id,' +
-      'article.title as title,' +
-      'article.introduce as introduce,' +
-      'article.viewNum as viewNum ,' +
-      "FROM_UNIXTIME(article.addTime,'%Y-%m-%d' ) as addTime," +
-      'type.typeName as typeName ' +
-      'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
-      'ORDER BY article.id DESC ';
-
-    return await app.mysql.query(sql);
+    throw { code: 10001, msg: '账户密码错误', _operation: true };
   }
 }
 module.exports = AdminService;

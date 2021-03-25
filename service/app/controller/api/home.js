@@ -5,7 +5,6 @@ const Controller = require('egg').Controller;
 class HomeController extends Controller {
   async index() {
     // const result = await this.app.mysql.get('blog_content', {});
-    // console.log(result);
     // this.ctx.body = result;
 
     this.ctx.body = 'api hi';
@@ -13,41 +12,17 @@ class HomeController extends Controller {
 
   // 获取文章列表
   async getArticleList() {
-    const sql = 'SELECT article.id as id ,' +
-      'article.title as title ,' +
-      'article.introduce as introduce ,' +
-      // 'article.addTime as addTime ,' +
-      "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime ," +
-      'article.viewNum as viewNum ,' +
-      'type.typeName as typeName ' +
-      'FROM article LEFT JOIN type ON article.type_id = type.Id';
-
-    const results = await this.app.mysql.query(sql);
-
-    this.ctx.body = {
-      data: results,
-    };
+    const { ctx, service } = this;
+    const result = await service.article.queryArticleList();
+    ctx.helper.success({ ctx, data: result });
   }
 
   // 获取文章详情
   async getArticleById() {
     // 先配置路由的动态传值，然后再接收值
-    const id = this.ctx.params.id;
-
-    const sql = 'SELECT article.id as id ,' +
-      'article.title as title ,' +
-      'article.introduce as introduce ,' +
-      'article.article_content as article_content ,' +
-      "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime ," +
-      'article.viewNum as viewNum ,' +
-      'type.typeName as typeName ,' +
-      'type.id as typeId ' +
-      'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
-      'WHERE article.id=' + id;
-
-    const result = await this.app.mysql.query(sql);
-
-    this.ctx.body = { data: result };
+    const { ctx, service } = this;
+    const result = await service.article.queryArticleById(ctx.params.id);
+    ctx.helper.success({ ctx, data: result });
   }
 
   // 得到类别名称和编号
@@ -62,14 +37,13 @@ class HomeController extends Controller {
     const sql = 'SELECT article.id as id,' +
       'article.title as title,' +
       'article.introduce as introduce,' +
-      "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime," +
       'article.viewNum as viewNum ,' +
+      "FROM_UNIXTIME(article.addTime,'%Y-%m-%d %H:%i:%s' ) as addTime," +
       'type.typeName as typeName ' +
       'FROM article LEFT JOIN type ON article.type_id = type.Id ' +
       'WHERE type_id=' + id;
     const result = await this.app.mysql.query(sql);
     this.ctx.body = { data: result };
-
   }
 }
 
